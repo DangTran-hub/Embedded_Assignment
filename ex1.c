@@ -36,13 +36,75 @@ struct node *addback(struct node *head, int data)
     return head;
 };
 
+// Find element Function
+struct node *find(struct node *head, int data)
+{
+    struct node *temp = head;
+
+    while (temp != NULL)
+    {
+        if (temp->data == data)
+            return temp;
+        temp = temp->next;
+    }
+
+    return NULL;
+}
+
+// Delete element Function
+struct node *delnode(struct node *head, struct node *pelement)
+{
+    if (head == NULL || pelement == NULL)
+        return head;
+
+    if (head == pelement)
+    {
+        struct node *temp = head;
+        head = head->next;
+        free(temp);
+        return head;
+    }
+
+    struct node *prev = head;
+    while (prev->next != NULL && prev->next != pelement)
+        prev = prev->next;
+
+    if (prev->next == pelement)
+    {
+        prev->next = pelement->next;
+        free(pelement);
+    }
+
+    return head;
+}
+
+// Free Linked List Function
+void freelist(struct node *head)
+{
+    struct node *temp;
+    while (head != NULL)
+    {
+        temp = head;
+        head = head->next;
+        free(temp);
+    }
+}
+
 int main()
 {
     struct node *head = NULL;
     head = addback(head, 1);
-    head = addback(head, 2);
     head = addback(head, 3);
+    head = addback(head, 2);
 
     display(head);
+    struct node *p = find(head, 2);
+    if (p != NULL)
+        printf("Found: %d\n", p->data);
+
+    head = delnode(head, p);
+    display(head);
+
+    freelist(head);
     return 0;
 }
